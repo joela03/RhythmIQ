@@ -12,6 +12,7 @@ const SignupPopup = ({ isOpen, onClose }) => {
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -19,6 +20,46 @@ const SignupPopup = ({ isOpen, onClose }) => {
             ...prev,
             [name]: value
         }));
+
+        if (errors[name]) {
+            setErrors(prev => ({
+                ...prev,
+                [name]: ''
+            }));
+        }
+    };
+
+    const validateForm = () => {
+        const newErrors = {};
+
+        if (!formData.firstName.trim()) {
+            newErrors.firstName = 'First Name is required';
+        }
+        
+        if (!formData.lastName.trim()) {
+            newErrors.lastName = 'Last Name is required';
+        }
+
+        if (!formData.email.trim()) {
+            newErrors.email = 'Email is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = 'Please enter a valid email';
+        }
+
+        if (!formData.password.trim()) {
+            newErrors.password = 'Password is required';
+        } else if (formData.password.length < 8) {
+            newErrors.password = 'Password must be at least 8 characters';
+        }
+
+        if (!formData.confirmPassword.trim()) {
+            newErrors.confirmPassword = 'Please confirm your password';
+        } else if (formData.confirmPassword !== formData.password) {
+            newErrors.confirmPassword = "Passwords don't match";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     if (!isOpen) return null;
@@ -47,9 +88,14 @@ const SignupPopup = ({ isOpen, onClose }) => {
                                 name="firstName"
                                 value={formData.firstName}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                    errors.firstName ? 'border-red-500' : 'border-gray-300'
+                                }`}
                                 placeholder="John"
                             />
+                            {errors.firstName && (
+                                <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+                            )}
                         </div>
                         
                         <div>
@@ -61,9 +107,14 @@ const SignupPopup = ({ isOpen, onClose }) => {
                                 name="lastName"
                                 value={formData.lastName}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                    errors.lastName ? 'border-red-500' : 'border-gray-300'
+                                }`}
                                 placeholder="Doe"
                             />
+                            {errors.lastName && (
+                                <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+                            )}
                         </div>
                     </div>
 
@@ -76,9 +127,14 @@ const SignupPopup = ({ isOpen, onClose }) => {
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                errors.email ? 'border-red-500' : 'border-gray-300'
+                            }`}
                             placeholder="john@example.com"
                         />
+                        {errors.email && (
+                            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                        )}
                     </div>
 
                     <div>
@@ -91,7 +147,9 @@ const SignupPopup = ({ isOpen, onClose }) => {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={`w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                    errors.password ? 'border-red-500' : 'border-gray-300'
+                                }`}
                                 placeholder="••••••••"
                             />
                             <button
@@ -102,6 +160,9 @@ const SignupPopup = ({ isOpen, onClose }) => {
                                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
+                        {errors.password && (
+                            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                        )}
                     </div>
 
                     <div>
@@ -114,7 +175,9 @@ const SignupPopup = ({ isOpen, onClose }) => {
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={`w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                    errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                                }`}
                                 placeholder="••••••••"
                             />
                             <button
@@ -125,10 +188,14 @@ const SignupPopup = ({ isOpen, onClose }) => {
                                 {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
+                        {errors.confirmPassword && (
+                            <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
+                        )}
                     </div>
 
                     <button
                         type="button"
+                        onClick={validateForm}
                         className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                         Create Account
