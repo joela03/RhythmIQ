@@ -2,8 +2,24 @@ import React, { useState } from 'react';
 import { X, Eye, EyeOff } from 'lucide-react';
 
 const SignupPopup = ({ isOpen, onClose }) => {
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+    });
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     if (!isOpen) return null;
 
@@ -28,6 +44,9 @@ const SignupPopup = ({ isOpen, onClose }) => {
                             </label>
                             <input
                                 type="text"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="John"
                             />
@@ -39,6 +58,9 @@ const SignupPopup = ({ isOpen, onClose }) => {
                             </label>
                             <input
                                 type="text"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="Doe"
                             />
@@ -51,6 +73,9 @@ const SignupPopup = ({ isOpen, onClose }) => {
                         </label>
                         <input
                             type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="john@example.com"
                         />
@@ -63,6 +88,9 @@ const SignupPopup = ({ isOpen, onClose }) => {
                         <div className="relative">
                             <input
                                 type={showPassword ? 'text' : 'password'}
+                                name="password"
+                                value={formData.password}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="••••••••"
                             />
@@ -83,6 +111,9 @@ const SignupPopup = ({ isOpen, onClose }) => {
                         <div className="relative">
                             <input
                                 type={showConfirmPassword ? 'text' : 'password'}
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="••••••••"
                             />
