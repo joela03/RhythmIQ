@@ -13,8 +13,8 @@ const Sidebar = () => {
 
     return (
         <aside className="w-64 h-screen bg-white border-r border-gray-200">
-            <div>
-                <h1>RhythmIQ</h1>
+            <div p-6 border-b border-gray-200>
+                <h1 className="text-xl font-bold text-gray-900">RhythmIQ</h1>
             </div>
             <nav>
                 <ul>
