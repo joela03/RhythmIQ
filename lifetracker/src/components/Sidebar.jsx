@@ -12,7 +12,7 @@ const Sidebar = () => {
     ]
 
     return (
-        <aside>
+        <aside className="w-64 h-screen bg-white border-r border-gray-200">
             <div>
                 <h1>RhythmIQ</h1>
             </div>
@@ -32,7 +32,7 @@ const Sidebar = () => {
                 </ul>
             </nav>
         </aside>
-    )
-}
+    );
+};
 
 export default Sidebar;
