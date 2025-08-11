@@ -1,80 +1,55 @@
 import React from 'react';
-import { Brain, Zap, ChevronRight, Lightbulb } from 'lucide-react';
+import DashboardCard from '../components/DashboardCard'
+import { Brain, Zap, Target, Lightbulb, TrendingUp } from 'lucide-react';
 
-const AIInsightsSummary = () => {
+const AIInsights = () => {
   const insights = [
     {
       title: "Optimal Workout Time",
-      insight: "You're 73% more consistent at 7 AM",
+      insight: "You're 73% more consistent at 7 AM workouts",
       confidence: 87,
       icon: Zap,
       color: 'from-blue-500 to-cyan-500'
     },
     {
       title: "Habit Stacking",
-      insight: "Read after morning coffee",
+      insight: "Reading after morning coffee increases completion by 45%",
       confidence: 92,
       icon: Lightbulb,
       color: 'from-purple-500 to-violet-500'
+    },
+    {
+      title: "Weekly Pattern",
+      insight: "Mondays and Wednesdays are your strongest days",
+      confidence: 78,
+      icon: Target,
+      color: 'from-emerald-500 to-teal-500'
+    },
+    {
+      title: "Progress Trend",
+      insight: "30% improvement in consistency this month",
+      confidence: 95,
+      icon: TrendingUp,
+      color: 'from-orange-500 to-red-500'
     }
   ];
 
-  const totalInsights = 5; 
-  const mostRelevantInsight = insights[0];
-
-  return (
-    <div className="w-90 bg-white rounded-xl border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-200">
-      <div className="p-4 border-b border-gray-100">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg">
-              <Brain className="text-white" size={18} />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">AI Insights</h3>
-              <p className="text-xs text-gray-500">{totalInsights} new insights</p>
-            </div>
-          </div>
-          <a href="/insights" className="text-xs font-medium text-purple-600 flex items-center">
-            View all <ChevronRight size={16} />
-          </a>
-        </div>
-      </div>
-
-      <div className="p-4">
-        <div className={`p-3 bg-gradient-to-r ${mostRelevantInsight.color} rounded-lg text-white`}>
-          <div className="flex items-start space-x-3">
-            <div className="p-1.5 bg-white/20 rounded-md">
-              <mostRelevantInsight.icon className="text-white" size={16} />
-            </div>
-            <div>
-              <h4 className="text-sm font-medium mb-1">{mostRelevantInsight.title}</h4>
-              <p className="text-xs opacity-90">{mostRelevantInsight.insight}</p>
-            </div>
-          </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-xs font-medium opacity-90">Confidence: {mostRelevantInsight.confidence}%</span>
-            <div className="w-16 bg-white/30 rounded-full h-1.5">
-              <div 
-                className="bg-white h-1.5 rounded-full" 
-                style={{ width: `${mostRelevantInsight.confidence}%` }}
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-4 pt-0">
-        <a 
-          href="/insights" 
-          className="inline-flex items-center text-xs font-medium text-purple-600 hover:text-purple-800 transition-colors"
-        >
-          <Lightbulb size={14} className="mr-1.5" />
-          See all recommendations
-        </a>
-      </div>
-    </div>
-  );
+    return (
+        <DashboardCard
+        title='AI Insights'
+        subtitle={`${insights.length} new insights`}
+        headerIcon={Brain}
+        headerGradient='from-purple-500 to-violet-600'
+        viewAllink="/insights"
+        viewAllText="View all"
+        insights={insights}
+        footerAction={{
+            link: "/insights",
+            icon: Lightbulb,
+            text: "See all reccomendations"
+        }}
+        />
+    );
 };
 
-export default AIInsightsSummary;
+export default AIInsights;
