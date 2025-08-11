@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Contact, Search, Zap, MessageCircle, Users } from 'lucide-react'
 
 const SocialSection = () => {
+
+    const [hoveredFriend, setHoveredFriend] = useState(null);
     
     const friends = [
         { id: 1, name: 'Sarah Chen', status: 'online', avatar: '👩‍💼', streak: 15, activity: 'Completed morning workout' },
@@ -24,7 +26,9 @@ const SocialSection = () => {
             <div className='p-6 border-b border-gray-200'>
                 <div className='flex items-center justify-between mb-4'>
                     <div className='flex items-center space-x-2'>
-                        <Users className='text-blue-600' size={24}/>
+                        <div className='p-2 bg-gradient-to-r from-violet-500 to-purple-600 rounded-lg'>
+                            <Users className='text-white bg-purple' size={24}/>
+                        </div>
                         <h1 className='text-xl font-bold text-gray-900'>Social</h1>
                     </div>
                     <button className='p-2 rounded-lg hover:bg-gray-100 transition-colors'>
@@ -36,7 +40,12 @@ const SocialSection = () => {
             <div className='p-4'>
                 <div>
                     {friends.map((friend) => (
-                        <div key={friend.id} className='flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors'>
+                        <div 
+                            key={friend.id}
+                            className='flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors'
+                            onMouseEnter={() => setHoveredFriend(friend.id)}
+                            onMouseLeave={() => setHoveredFriend(null)}
+                        >
                             <div className='relative'>
                                 <div className='w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-lg'>
                                     {friend.avatar}
@@ -51,7 +60,16 @@ const SocialSection = () => {
                                         <span className='text-xs text-orange-600 font-medium'>{friend.streak}</span>
                                     </div>
                                 </div>
-                                <p className='text-sm text-gray-500 truncate'>{friend.activity}</p>
+                                <div className='relative'>
+                                    <p className='text-sm text-gray-500 truncate'>{friend.activity}</p>
+                                    {hoveredFriend == friend.id && (
+                                        <div className='absolute p-3 top-0 left-0 right-0 z-10 bg-slate-900 text-white text-sm rounded-lg shadow-lg border-slate-700'>
+                                            <div className='relative'>
+                                                {friend.activity}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <button className='p-1 rounded-full hover:bg-gray-200 transition-colors'>
                                 <MessageCircle size={16} className='text-gray-400'/>
