@@ -1,5 +1,5 @@
 import React from 'react'
-import { Contact, Search, Zap, MessageCircle } from 'lucide-react'
+import { Contact, Search, Zap, MessageCircle, Users } from 'lucide-react'
 
 const SocialSection = () => {
     
@@ -20,15 +20,18 @@ const SocialSection = () => {
     }
 
     return (
-        <aside className='fixed right-0 top-0 w-80'>
+        <aside className='fixed right-0 top-0 w-70 h-screen bg-white border-l border-gray-200 overflow-y-auto'>
             <div className='p-6 border-b border-gray-200'>
                 <div className='flex items-center justify-between mb-4'>
-                    <Contact/>
-                    <h1>Social</h1>
+                    <div className='flex items-center space-x-2'>
+                        <Users className='text-blue-600' size={24}/>
+                        <h1 className='text-xl font-bold text-gray-900'>Social</h1>
+                    </div>
+                    <button className='p-2 rounded-lg hover:bg-gray-100 transition-colors'>
+                        <Search size={20}/>
+                    </button>
                 </div>
-                <button>
-                    <Search size={20}/>
-                </button>
+        
             </div>
             <div className='p-4'>
                 <div>
