@@ -10,7 +10,12 @@ const StreakCalendar = () => {
     newDate.setMonth(newDate.getMonth() + (direction === 'next' ? 1 : -1));
     setCurrentDate(newDate);
   }
-  
+
+    const streakData = {
+  '2025-06-02': { fitness: 3/3, education: 1/2, social: 0/1, productivity: 4/4 },
+  '2025-06-03': { fitness: 2/3, education: 2/2, social: 1/1, productivity: 3/4 },
+}
+
   const generateDays = () => {
     const days = [];
     const year = currentDate.getFullYear();
