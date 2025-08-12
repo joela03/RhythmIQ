@@ -12,9 +12,23 @@ const StreakCalendar = () => {
   }
 
     const streakData = {
-  '2025-06-02': { fitness: 3/3, education: 1/2, social: 0/1, productivity: 4/4 },
+  '2025-06-02': { fitness: 3/3, education: 2/2, social: 1/1, productivity: 4/4 },
   '2025-06-03': { fitness: 2/3, education: 2/2, social: 1/1, productivity: 3/4 },
-}
+    }
+
+  const getCellColor = (date) => {
+    if (!streakData[date]) return { bgColor: '', opacity: '' };
+
+    const totals = Object.values(streakData[date]);
+    const completionRatio = totals.reduce((sum, val) => sum + val, 0) / totals.length;
+
+    if (completionRatio == 0) return { bgColor: '', opacity: '' };
+    if (completionRatio <= 0.25) return { bgColor: 'bg-purple-500', opacity: 'bg-opacity-20' };
+    if (completionRatio <= 0.5) return { bgColor: 'bg-purple-500', opacity: 'bg-opacity-40' };
+    if (completionRatio <= 0.75) return { bgColor: 'bg-purple-500', opacity: 'bg-opacity-60' };
+    return { bgColor: 'bg-purple-500', opacity: 'bg-opacity-80' };
+  };
+  
 
   const generateDays = () => {
     const days = [];
@@ -77,10 +91,17 @@ const StreakCalendar = () => {
           
           return (
             <div 
-              key={dayData.date}
-              className="h-10 rounded-md flex items-center justify-center text-sm bg-gray-50"
+            key={dayData.date}
+            className={`h-10 rounded-md flex items-center justify-center text-sm ${
+                streakData[dayData.date] ? `bg-purple-500 ${getCellColor(dayData.date)} text-white` : 'bg-gray-50'
+            }`}
             >
-              {dayData.day}
+            {dayData.day}
+            {streakData[dayData.date] && (
+                <span className="absolute bottom-1 right-1 text-[10px]">
+                {Object.values(streakData[dayData.date]).filter(v => v > 0).length}
+                </span>
+            )}
             </div>
           );
         })}
