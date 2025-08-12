@@ -88,13 +88,18 @@ const StreakCalendar = () => {
         
         {generateDays().map((dayData, index) => {
           if (!dayData) return <div key={`empty-${index}`} className="h-10"></div>;
+          const isToday = dayData.date === new Date().toISOString().split('T')[0];
           
           return (
             <div 
             key={dayData.date}
-            className={`h-10 rounded-md flex items-center justify-center text-sm ${
+            className={`relative h-10 rounded-md flex items-center justify-center text-sm ${
                 streakData[dayData.date] ? `bg-purple-500 ${getCellColor(dayData.date)} text-white` : 'bg-gray-50'
-            }`}
+            } ${
+                isToday ? 'ring-2 ring-offset-1 ring-blue-500' : ''
+            }
+            
+            `}
             >
             {dayData.day}
             {streakData[dayData.date] && (
