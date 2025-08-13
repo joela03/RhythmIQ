@@ -22,29 +22,37 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} h-screen bg-white border-r border-gray-200`}>
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                {!isCollapsed && (
-                    <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg">
-                            <Target className="text-white" size={20} />
+        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} h-screen bg-white border-r border-gray-200 shadow-xs transition-all duration-200`}>
+            <div className="p-6 border-b border-gray-100">
+                {!isCollapsed ? (
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                            <div className="p-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg">
+                                <Target className="text-white" size={20} />
+                            </div>
+                            <h1 className="text-xl font-bold text-gray-900">RhythmIQ</h1>
                         </div>
-                        <h1 className="text-xl font-bold text-gray-900">RhythmIQ</h1>
+                        <button
+                            onClick={toggleSidebar}
+                            className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
+                            aria-label="Collapse sidebar"
+                            title="Collapse sidebar"
+                        >
+                            <X size={18} />
+                        </button>
+                    </div>
+                ) : (
+                    <div className="flex justify-center">
+                        <button
+                            onClick={toggleSidebar}
+                            className="p-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg hover:shadow-md transition-all duration-200"
+                            aria-label="Expand sidebar"
+                            title="Expand sidebar"
+                        >
+                            <Target className="text-white" size={20} />
+                        </button>
                     </div>
                 )}
-                {isCollapsed && (
-                    <div className="p-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg mx-auto">
-                        <Target className="text-white" size={20} />
-                    </div>
-                )}
-                <button
-                    onClick={toggleSidebar}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
-                    aria-label="Toggle sidebar"
-                    title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                >
-                    {isCollapsed ? <Menu size={18} /> : <X size={18} />}
-                </button>
             </div>
             <nav className="p-3">
                 <ul className="space-y-2">
@@ -78,6 +86,21 @@ const Sidebar = () => {
                     )
                    })}
                 </ul>
+                {!isCollapsed && (
+                    <div className="mt-8 pt-6 border-t border-gray-100">
+                        <div className="p-3 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg text-white">
+                            <div className="flex items-start space-x-3">
+                                <div className="p-1.5 bg-white/20 rounded-md flex-shrink-0">
+                                    <Target className="text-white" size={14} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="text-sm font-medium mb-1">Pro Tip</h4>
+                                    <p className="text-xs opacity-90">Track multiple habits to build stronger streaks!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </nav>
         </aside>
     );
