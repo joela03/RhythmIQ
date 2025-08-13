@@ -22,17 +22,28 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className={`${isCollapsed ? 'w-20' : 'w-50'} h-screen bg-white border-r border-gray-200`}>
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} h-screen bg-white border-r border-gray-200`}>
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                 {!isCollapsed && (
-                    <h1 className="text-xl font-bold text-gray-900">RhythmIQ</h1>
+                    <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg">
+                            <Target className="text-white" size={20} />
+                        </div>
+                        <h1 className="text-xl font-bold text-gray-900">RhythmIQ</h1>
+                    </div>
+                )}
+                {isCollapsed && (
+                    <div className="p-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg mx-auto">
+                        <Target className="text-white" size={20} />
+                    </div>
                 )}
                 <button
                     onClick={toggleSidebar}
-                    className='p-1 rounded-lg hover:bg-gray-100 transition-colors'
-                    aria-label='Change sidebar'
+                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
+                    aria-label="Toggle sidebar"
+                    title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                 >
-                    {isCollapsed ? <Menu size={20} /> : <X size={20} />}
+                    {isCollapsed ? <Menu size={18} /> : <X size={18} />}
                 </button>
             </div>
             <nav className="p-3">
