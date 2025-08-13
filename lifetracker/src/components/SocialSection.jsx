@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Contact, Search, Zap, MessageCircle, Users } from 'lucide-react'
+import { Contact, Search, Zap, MessageCircle, Users, TrendingUp, Award} from 'lucide-react'
 
 const SocialSection = () => {
 
@@ -77,9 +77,59 @@ const SocialSection = () => {
                         </div>
                     ))}
                 </div>
+                <div className="border-t border-gray-100 pt-4">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-4">Social Insights</h3>
+                    <div className="space-y-3">
+                        <div className="p-3 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg text-white">
+                            <div className="flex items-start space-x-3">
+                                <div className="p-1.5 bg-white/20 rounded-md flex-shrink-0">
+                                    <TrendingUp className="text-white" size={14} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="text-sm font-medium mb-1">Group Momentum</h4>
+                                    <p className="text-xs opacity-90">Your friend group's average streak is 12.5 days - you're performing above average!</p>
+                                </div>
+                            </div>
+                            <div className="mt-3 flex items-center justify-between">
+                                <span className="text-xs font-medium opacity-90">Confidence: 92%</span>
+                                <div className="w-16 bg-white/30 rounded-full h-1.5">
+                                    <div className="bg-white h-1.5 rounded-full transition-all duration-300" style={{ width: '92%' }}></div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg text-white">
+                            <div className="flex items-start space-x-3">
+                                <div className="p-1.5 bg-white/20 rounded-md flex-shrink-0">
+                                    <Users className="text-white" size={14} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="text-sm font-medium mb-1">Perfect Partner</h4>
+                                    <p className="text-xs opacity-90">Emma Davis has similar wellness goals - consider becoming accountability partners!</p>
+                                </div>
+                            </div>
+                            <div className="mt-3 flex items-center justify-between">
+                                <span className="text-xs font-medium opacity-90">Confidence: 78%</span>
+                                <div className="w-16 bg-white/30 rounded-full h-1.5">
+                                    <div className="bg-white h-1.5 rounded-full transition-all duration-300" style={{ width: '78%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-3 bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg text-white">
+                            <div className="flex items-start space-x-3">
+                                <div className="p-1.5 bg-white/20 rounded-md flex-shrink-0">
+                                    <Award className="text-white" size={14} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="text-sm font-medium mb-1">Weekly Challenge</h4>
+                                    <p className="text-xs opacity-90">Start a group challenge to boost everyone's motivation this week!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
         </aside>
     )
 };
