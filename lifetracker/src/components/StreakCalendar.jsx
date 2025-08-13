@@ -1,9 +1,38 @@
-import React, { useState } from 'react';
-import { Flame, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Flame, ChevronLeft, ChevronRight, Filter, ChevronDown } from 'lucide-react';
 
 const StreakCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const currentStreak = 12;
+
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const filterRef = useRef('null')
+
+  const categories = [
+  { id: 'all', name: 'All Categories', color: 'bg-purple-500' },
+  { id: 'fitness', name: 'Fitness', color: 'bg-blue-500' },
+  { id: 'education', name: 'Education', color: 'bg-green-500' },
+  { id: 'social', name: 'Social', color: 'bg-amber-500' },
+  { id: 'productivity', name: 'Productivity', color: 'bg-red-500' }
+];
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (filterRef.current && !filterRef.current.contains(event.target)) {
+                setIsFilterOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleFilterSelect = (categoryId) => {
+        setActiveFilter(categoryId);
+        setIsFilterOpen(false);
+    };
 
   const navigatePeriod = (direction) => {
     const newDate = new Date(currentDate);
@@ -77,7 +106,36 @@ const StreakCalendar = () => {
                     {currentStreak} day streak
                 </span>
             </div>
+            <div className="flex space-x-2">
+            <div className="relative" ref={filterRef}>
+                <button 
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className="flex items-center space-x-1 px-3 py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+                >
+                <Filter size={16} />
+                <span>{categories.find(c => c.id === activeFilter)?.name}</span>
+                <ChevronDown size={14} className={`transform transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isFilterOpen && (
+                <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                    {categories.map(category => (
+                    <button
+                        key={category.id}
+                        onClick={() => handleFilterSelect(category.id)}
+                        className={`w-full text-left px-4 py-2 text-sm flex items-center ${
+                        activeFilter === category.id ? 'bg-gray-100' : 'hover:bg-gray-50'
+                        }`}
+                    >
+                        <span className={`w-2 h-2 rounded-full ${category.color} mr-2`}></span>
+                        {category.name}
+                    </button>
+                    ))}
+                </div>
+                )}
+            </div>
+            </div>
         </div>
+        
       
           <div className="grid grid-cols-7 gap-1">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
