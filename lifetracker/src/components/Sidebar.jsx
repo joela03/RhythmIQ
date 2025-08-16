@@ -22,7 +22,7 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} h-screen bg-white border-r border-gray-200 shadow-xs transition-all duration-200`}>
+         <aside className={`${isCollapsed ? 'w-20' : 'w-64'} h-screen bg-white border-r border-gray-200 shadow-xs transition-all duration-200 fixed left-0 top-0`}>
             <div className="p-6 border-b border-gray-100">
                 {!isCollapsed ? (
                     <div className="flex items-center justify-between">
