@@ -22,7 +22,7 @@ const SocialSection = () => {
     }
 
     return (
-        <aside className='fixed right-0 top-0 w-70 h-screen bg-white border-l border-gray-200 overflow-y-auto'>
+        <aside className='fixed right-0 top-0 w-80 h-screen bg-white border-l border-gray-200 overflow-y-auto'>
             <div className='p-6 border-b border-gray-200'>
                 <div className='flex items-center justify-between mb-4'>
                     <div className='flex items-center space-x-2'>
