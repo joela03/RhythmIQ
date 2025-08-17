@@ -3,13 +3,20 @@ import SocialSection from '../components/SocialSection';
 import AIInsights from '../components/AIInsights';
 import StreakCalendar from '../components/StreakCalendar';
 import TodaysFocusCard from '../components/TodaysFocusCard';
+import QuickStats from '../components/QuickStats';
+import { useState } from 'react';
 
 const Dashboard = () => {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-purple-50/10">
-      <Sidebar/>
-      <main className="flex-1 min-w-0 ml-64 mr-80 px-6 py-6 overflow-x-auto">
-                <div className="mb-8">
+      <Sidebar
+      isCollapsed={isSidebarCollapsed}
+      toggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+      />
+      <main className={`flex-1 min-w-0 ${isSidebarCollapsed ? 'ml-20' : 'ml-64'} mr-80 px-6 py-6`}>
+        <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="backdrop-blur-sm bg-white/70 rounded-2xl p-6 border border-white/20 shadow-lg">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -28,20 +35,21 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <AIInsights />
-            </div>
+        <div className="mb-6">
+          <QuickStats/>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-1">
+            <AIInsights className="h-full"/>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <TodaysFocusCard />
-            <StreakCalendar />
+          <div className="xl:col-span-1">
+            <TodaysFocusCard className="h-full"/>
+          </div>
+          <div className="xl:col-span-1">
+            <StreakCalendar className="h-full"/>
           </div>
         </div>
       </main>
-      
       <SocialSection />
     </div>
   );

@@ -1,9 +1,8 @@
 import React, {useState} from 'react'
 import {Home, Target, Users, BarChart3, Menu, X, Goal} from 'lucide-react'
 
-const Sidebar = () => {
-    const [isCollapsed, setIsCollapsed] = useState(false)
-    const [activeItem, setActiveItem] = useState('dashboard')
+const Sidebar = ( {isCollapsed, toggleCollapse} ) => {
+    const [activeItem, setActiveItem] = useState('dashboard');
 
     const navigationItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home, gradient: 'from-purple-500 to-violet-600' },
@@ -33,9 +32,9 @@ const Sidebar = () => {
                             <h1 className="text-xl font-bold text-gray-900">RhythmIQ</h1>
                         </div>
                         <button
-                            onClick={toggleSidebar}
+                            onClick={toggleCollapse}
                             className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
-                            aria-label="Collapse sidebar"
+                            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                             title="Collapse sidebar"
                         >
                             <X size={18} />
@@ -44,9 +43,9 @@ const Sidebar = () => {
                 ) : (
                     <div className="flex justify-center">
                         <button
-                            onClick={toggleSidebar}
+                            onClick={toggleCollapse}
                             className="p-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg hover:shadow-md transition-all duration-200"
-                            aria-label="Expand sidebar"
+                            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                             title="Expand sidebar"
                         >
                             <Target className="text-white" size={20} />
