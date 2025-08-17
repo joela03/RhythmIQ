@@ -108,20 +108,20 @@ const StreakCalendar = () => {
   const getActiveCategory = () => categories.find(c => c.id === activeFilter);
 
   return (
-    <div className="w-90 bg-white rounded-xl border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-200">
+    <div className="w-96 min-w-96 max-w-96 bg-white rounded-xl border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-200">
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className={`p-2 bg-gradient-to-r ${getActiveCategory().gradient} rounded-lg`}>
               <Flame className="text-white" size={18} />
             </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Streak Calendar</h3>
-              <p className="text-xs text-gray-500">{currentStreak} day streak active</p>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-semibold text-gray-900 truncate">Streak Calendar</h3>
+              <p className="text-xs text-gray-500 truncate">{currentStreak} day streak active</p>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 flex-shrink-0">
             <button 
               onClick={() => setViewMode(viewMode === 'month' ? 'week' : 'month')}
               className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
@@ -133,10 +133,10 @@ const StreakCalendar = () => {
             <div className="relative" ref={filterRef}>
               <button 
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className="flex items-center space-x-1 px-3 py-2 bg-gray-50 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+                className="flex items-center space-x-1 px-3 py-2 bg-gray-50 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors whitespace-nowrap"
               >
                 <Filter size={14} />
-                <span>{getActiveCategory()?.name}</span>
+                <span className="truncate max-w-20">{getActiveCategory()?.name}</span>
                 <ChevronDown size={12} className={`transform transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
               </button>
               {isFilterOpen && (
@@ -149,8 +149,8 @@ const StreakCalendar = () => {
                         activeFilter === category.id ? 'bg-gray-50' : 'hover:bg-gray-50'
                       } first:rounded-t-lg last:rounded-b-lg transition-colors`}
                     >
-                      <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${category.gradient} mr-3`}></div>
-                      <span className="font-medium text-gray-900">{category.name}</span>
+                      <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${category.gradient} mr-3 flex-shrink-0`}></div>
+                      <span className="font-medium text-gray-900 truncate">{category.name}</span>
                     </button>
                   ))}
                 </div>
@@ -164,21 +164,23 @@ const StreakCalendar = () => {
         <div className="flex items-center justify-between mb-4">
           <button 
             onClick={() => navigatePeriod('prev')}
-            className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors flex-shrink-0"
           >
             <ChevronLeft size={18} />
           </button>
           
-          <h4 className="font-semibold text-gray-900">
-            {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+          <div className="text-center min-w-0 flex-1">
+            <h4 className="font-semibold text-gray-900 truncate">
+              {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+            </h4>
             {viewMode === 'week' && (
-              <span className="text-xs font-normal text-gray-500 ml-2">(Week View)</span>
+              <span className="text-xs font-normal text-gray-500">(Week View)</span>
             )}
-          </h4>
+          </div>
           
           <button 
             onClick={() => navigatePeriod('next')}
-            className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors flex-shrink-0"
           >
             <ChevronRight size={18} />
           </button>
@@ -234,8 +236,8 @@ const StreakCalendar = () => {
         
         <div className="mt-6 pt-4 border-t border-gray-100">
           <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center space-x-4">
-              <span className="font-semibold text-gray-700">Intensity:</span>
+            <div className="flex items-center space-x-4 min-w-0 flex-1">
+              <span className="font-semibold text-gray-700 flex-shrink-0">Intensity:</span>
               <div className="flex items-center space-x-1">
                 {[1, 2, 3, 4].map(level => (
                   <div 
@@ -246,7 +248,7 @@ const StreakCalendar = () => {
                 ))}
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 flex-shrink-0">
               <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
               <span className="font-medium text-gray-700">Today</span>
             </div>
