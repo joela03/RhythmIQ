@@ -108,7 +108,7 @@ const StreakCalendar = () => {
   const getActiveCategory = () => categories.find(c => c.id === activeFilter);
 
   return (
-    <div className="w-96 min-w-96 max-w-96 bg-white rounded-xl border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-200">
+    <div className="w-100 bg-white rounded-xl border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-200">
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">

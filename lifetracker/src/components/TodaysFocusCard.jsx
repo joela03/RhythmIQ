@@ -86,7 +86,7 @@ const TodaysFocusCard = () => {
   const filteredHabits = showCompleted ? habits : habits.filter(h => !h.completed)
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 p-6 max-w-md">
+    <div className="w-90 bg-gradient-to-br from-slate-50 to-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
           <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl">
