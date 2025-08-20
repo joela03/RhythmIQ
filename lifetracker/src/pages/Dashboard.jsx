@@ -49,8 +49,10 @@ const Dashboard = () => {
             <StreakCalendar className="h-full"/>
           </div>
         </div>
+        <div className="xl:col-span-1">  
+          <SocialSection/>
+        </div>
       </main>
-      <SocialSection />
     </div>
   );
 };
