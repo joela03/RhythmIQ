@@ -14,14 +14,14 @@ const DashboardCard = ({
 }) => {
 
     const HeaderIcon = headerIcon;
-
+    
   return (
-    <div className="w-90 bg-white rounded-xl border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-200">
+    <div className="h-[600px] bg-white rounded-xl border border-gray-200 shadow-xs hover:shadow-sm transition-all duration-200">
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className={`p-2 bg-gradient-to-r ${headerGradient} rounded-lg`}>
-              {HeaderIcon && <HeaderIcon className="text-white" size={18} />}
+              {headerIcon && <headerIcon className="text-white" size={18} />}
             </div>
             <div>
               <h3 className="font-semibold text-gray-900">{title}</h3>
@@ -38,7 +38,7 @@ const DashboardCard = ({
 
       {insights.length > 0 && (
         <div className="p-4">
-          <div className="space-y-3 max-h-64 overflow-y-auto">
+          <div className="space-y-3 overflow-y-auto">
             {insights.slice(0, 3).map((insight, index) => (
               <div 
                 key={index}
