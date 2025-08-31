@@ -8,12 +8,13 @@ import {
   Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 
-const LaunchScreen = () => {
+export default function Launch() {
   const handleGetStarted = () => {
-    console.log('Navigate to onboarding');
+    router.push('/(auth)/signup');
   };
 
   const handleSignIn = () => {
@@ -23,37 +24,43 @@ const LaunchScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient
-        colors={['#f8fafc', '#eff6ff', '#faf5ff']}
+        colors={['#faf7ff', '#f3f0ff', '#eef2ff']}
         style={styles.backgroundGradient}
       />
       
       <View style={styles.content}>
         <View style={styles.heroSection}>
+          <View style={styles.brandContainer}>
+            <Text style={styles.brandName}>RhythmIQ</Text>
+            <View style={styles.brandAccent} />
+          </View>
+          
           <Text style={styles.headline}>
-            RhythmIQ
-          </Text>
-          <Text style={styles.subheading}>
             Social Habit Tracking{'\n'}with AI-Powered Insights
+          </Text>
+          
+          <Text style={styles.subheading}>
+            Join friends to keep each other accountable and stay consitent with AI
           </Text>
         </View>
 
         <View style={styles.visualContainer}>
           <View style={styles.illustrationPlaceholder}>
             <View style={styles.iconGrid}>
-              <View style={[styles.iconCard, styles.blueGradient]}>
-                <View style={styles.iconDot} />
-              </View>
-              <View style={[styles.iconCard, styles.orangeGradient]}>
-                <View style={styles.iconDot} />
-              </View>
-              <View style={[styles.iconCard, styles.greenGradient]}>
-                <View style={styles.iconDot} />
-              </View>
               <View style={[styles.iconCard, styles.purpleGradient]}>
                 <View style={styles.iconDot} />
               </View>
+              <View style={[styles.iconCard, styles.indigoGradient]}>
+                <View style={styles.iconDot} />
+              </View>
+              <View style={[styles.iconCard, styles.violetGradient]}>
+                <View style={styles.iconDot} />
+              </View>
+              <View style={[styles.iconCard, styles.blueGradient]}>
+                <View style={styles.iconDot} />
+              </View>
             </View>
-            <Text style={styles.illustrationText}>Your habits, visualized</Text>
+            <Text style={styles.illustrationText}>Your habits, intelligently tracked</Text>
           </View>
         </View>
 
@@ -64,7 +71,7 @@ const LaunchScreen = () => {
             activeOpacity={0.8}
           >
             <LinearGradient
-              colors={['#3b82f6', '#06b6d4']}
+              colors={['#7c3aed', '#8b5cf6']}
               style={styles.buttonGradient}
             >
               <Text style={styles.primaryButtonText}>Get Started</Text>
@@ -83,7 +90,7 @@ const LaunchScreen = () => {
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -108,24 +115,44 @@ const styles = StyleSheet.create({
   
   heroSection: {
     alignItems: 'center',
-    marginTop: height * 0.1, 
+    marginTop: height * 0.08,
+  },
+  
+  brandContainer: {
+    alignItems: 'center',
+    marginBottom: 25,
+  },
+  
+  brandName: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#6366f1',
+    letterSpacing: 1.5,
+  },
+  
+  brandAccent: {
+    width: 50,
+    height: 4,
+    backgroundColor: '#7c3aed',
+    borderRadius: 2,
+    marginTop: 8,
   },
   
   headline: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827', // 
+    color: '#1f2937',
     textAlign: 'center',
-    lineHeight: 38,
-    marginBottom: 16,
+    lineHeight: 30,
+    marginBottom: 12,
   },
   
   subheading: {
     fontSize: 16,
     color: '#6b7280',
     textAlign: 'center',
-    lineHeight: 24,
-    paddingHorizontal: 20,
+    lineHeight: 22,
+    paddingHorizontal: 15,
   },
   
   visualContainer: {
@@ -134,20 +161,21 @@ const styles = StyleSheet.create({
   },
   
   illustrationPlaceholder: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 24,
     padding: 32,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-    shadowColor: '#000',
+    borderColor: 'rgba(139, 92, 246, 0.1)',
+    shadowColor: '#7c3aed',
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 6,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 12,
     alignItems: 'center',
+    position: 'relative',
   },
   
   iconGrid: {
@@ -191,6 +219,15 @@ const styles = StyleSheet.create({
   purpleGradient: {
     backgroundColor: '#8b5cf6',
   },
+
+  indigoGradient: {
+    backgroundColor: '#4B0082',
+  },
+
+  violetGradient: {
+    backgroundColor: '#7F00FF',
+  },
+
   
   iconDot: {
     width: 8,
@@ -248,5 +285,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
-export default LaunchScreen;
