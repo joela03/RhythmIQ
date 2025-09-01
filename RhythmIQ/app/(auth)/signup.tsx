@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, StyleSheet, KeyboardAvoidingView, Dimensions, Platform } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,6 +16,10 @@ export default function SignUp() {
     style={styles.container}
     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <SafeAreaView style={styles.container}>
+      <LinearGradient
+          colors={['#faf7ff', '#f3f0ff', '#eef2ff']}
+          style={styles.backgroundGradient}
+        />
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsHorizontalScrollIndicator={false}
@@ -47,6 +52,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center',
   },
+  backgroundGradient: {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+},
+
   heroSection: {
     alignItems: 'center',
     marginTop: height * 0.05,
