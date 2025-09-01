@@ -1,6 +1,12 @@
+import React, { useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, StyleSheet, KeyboardAvoidingView, Dimensions, Platform } from 'react-native';
 
 export default function SignUp() {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassweord] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const { width, height } = Dimensions.get('window')
   return (
