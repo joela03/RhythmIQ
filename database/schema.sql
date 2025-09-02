@@ -1,4 +1,3 @@
-
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE users (
@@ -25,9 +24,25 @@ CREATE TABLE users (
     )
 );
 
+CREATE TABLE user_sessions (
+    session_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    access_token_hash VARCHAR(255),
+    refresh_token_hash VARCHAR(255),
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    last_used TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    device_info JSONB,
+    is_active BOOLEAN DEFAULT true
+);
+
+CREATE INDEX idx_user_sessions_user_id ON user_sessions(user_id);
+CREATE INDEX idx_user_sessions_expires ON user_sessions(expires_at);
+CREATE INDEX idx_user_sessions_active ON user_sessions(is_active) WHERE is_active = true;
+
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
     name VARCHAR(50) NOT NULL,
     description TEXT,
     color VARCHAR(7),
@@ -38,9 +53,10 @@ CREATE TABLE categories (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     
-    UNIQUE(user_id, name),
-    UNIQUE(name) WHERE user_id IS NULL
+    UNIQUE(user_id, name)
 );
+
+CREATE UNIQUE INDEX idx_categories_system_name ON categories(name) WHERE user_id IS NULL;
 
 CREATE TABLE frequency_patterns (
     id SERIAL PRIMARY KEY,
@@ -50,6 +66,11 @@ CREATE TABLE frequency_patterns (
     is_system BOOLEAN DEFAULT false,
     is_active BOOLEAN DEFAULT true
 );
+
+INSERT INTO frequency_patterns (id, name, description, is_system) VALUES
+(5, 'weekdays', 'Monday through Friday', true),
+(6, 'weekends', 'Saturday and Sunday', true),
+(7, 'twice_weekly', 'Two times per week', true);
 
 CREATE TABLE statuses (
     id SERIAL PRIMARY KEY,
@@ -73,7 +94,7 @@ CREATE TABLE units (
 
 CREATE TABLE habits (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     category_id INTEGER REFERENCES categories(id),
     frequency_id INTEGER REFERENCES frequency_patterns(id),
     unit_id INTEGER REFERENCES units(id),
@@ -97,7 +118,7 @@ CREATE TABLE habits (
 CREATE TABLE habit_completions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     habit_id UUID NOT NULL REFERENCES habits(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     
     completed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     completion_date DATE NOT NULL,
@@ -109,7 +130,7 @@ CREATE TABLE habit_completions (
 
 CREATE TABLE goals (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     category_id INTEGER REFERENCES categories(id),
     unit_id INTEGER REFERENCES units(id),
     status_id INTEGER REFERENCES statuses(id),
@@ -176,6 +197,7 @@ INSERT INTO units (id, name, abbreviation, category, is_system) VALUES
 (9, 'glasses', 'gl', 'count', true),
 (10, 'servings', 'srv', 'count', true);
 
+CREATE INDEX idx_users_google_id ON users(google_id);
 CREATE INDEX idx_habits_user_id ON habits(user_id);
 CREATE INDEX idx_habits_category_id ON habits(category_id);
 CREATE INDEX idx_habits_status_id ON habits(status_id);
@@ -187,3 +209,7 @@ CREATE INDEX idx_goals_status_id ON goals(status_id);
 CREATE INDEX idx_goal_milestones_goal_id ON goal_milestones(goal_id);
 CREATE INDEX idx_categories_user_id ON categories(user_id);
 CREATE INDEX idx_categories_type ON categories(type);
+
+ALTER TABLE users ADD COLUMN email_verified BOOLEAN DEFAULT false;
+ALTER TABLE users ADD COLUMN google_refresh_token TEXT; 
+ALTER TABLE users ADD COLUMN display_name VARCHAR(150); 
