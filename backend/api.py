@@ -5,7 +5,7 @@ from typing import Optional
 from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from models import Base, User
+from backend.models import Base, User
 import uuid
 from passlib.context import CryptContext
 from dotenv import load_dotenv
@@ -55,7 +55,7 @@ def root():
 
 @app.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.email == user.email()).first()
+    existing_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
@@ -67,11 +67,18 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
         first_name=user.first_name,
         last_name=user.last_name,
         username=user.username or user.email.split('@')[0]
+        email_verified
     )
 
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-
-    return db_user
+    try:
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    except Exception as e:
+        db.rolllback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create user"
+        )
 
