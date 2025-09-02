@@ -8,7 +8,8 @@ import {
   KeyboardAvoidingView, 
   Dimensions, 
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons'
@@ -18,7 +19,7 @@ const { width, height } = Dimensions.get('window');
 export default function SignUp() {
 
   const [email, setEmail] = useState('');
-  const [password, setPassweord] = useState('');
+  const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,6 +55,26 @@ export default function SignUp() {
                 <Text style={styles.socialButtonText}>Continue with Google</Text>
               </View>
             </TouchableOpacity>
+          </View>
+          <View> 
+            <TextInput
+              style={styles.textInput}
+              placeholder="Enter your email"
+              placeholderTextColor="#9CA3AF"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+            <TextInput
+              style={[styles.textInput, styles.passwordInput]}
+              placeholder="Create a password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={true}
+              autoCapitalize="none"
+            />
           </View>
       </ScrollView>
       </SafeAreaView>
@@ -145,5 +166,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderWidth: 1,
     borderColor: 'rgba(139, 92, 246, 0.1)',
+  },
+    textInput: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: '#1f2937',
+    borderWidth: 1,
+    borderColor: 'rgba(139, 92, 246, 0.1)', 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  passwordInput: {
+    paddingRight: 55,
   },
 });
