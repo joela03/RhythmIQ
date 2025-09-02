@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, StyleSheet, KeyboardAvoidingView, Dimensions, Platform } from 'react-native';
+import { 
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView, 
+  StyleSheet, 
+  KeyboardAvoidingView, 
+  Dimensions, 
+  Platform,
+  TouchableOpacity
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons'
 
 const { width, height } = Dimensions.get('window');
 
@@ -35,6 +46,14 @@ export default function SignUp() {
                 Transform your life with personalised insights and social accountability
               </Text>
             </View>
+          </View>
+          <View>
+            <TouchableOpacity style={styles.socialButton}>
+              <View style={styles.socialButtonContent}>
+                <Ionicons name="logo-google" size={20} color="#4285F4"/>
+                <Text style={styles.socialButtonText}>Continue with Google</Text>
+              </View>
+            </TouchableOpacity>
           </View>
       </ScrollView>
       </SafeAreaView>
@@ -96,5 +115,35 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     paddingHorizontal: 10,
+  },
+    socialButton: {
+    width: '100%',
+    marginBottom: 12,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  
+  socialButtonContent: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+  },
+  socialButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#374151',
+    marginLeft: 12,
+  },
+  googleButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderWidth: 1,
+    borderColor: 'rgba(139, 92, 246, 0.1)',
   },
 });
