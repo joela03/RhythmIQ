@@ -20,6 +20,7 @@ export default function SignUp() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,25 +57,39 @@ export default function SignUp() {
               </View>
             </TouchableOpacity>
           </View>
-          <View> 
-            <TextInput
-              style={styles.textInput}
-              placeholder="Enter your email"
-              placeholderTextColor="#9CA3AF"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            <TextInput
-              style={[styles.textInput, styles.passwordInput]}
-              placeholder="Create a password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={true}
-              autoCapitalize="none"
-            />
+          <View>
+            <View>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Enter your email"
+                placeholderTextColor="#9CA3AF"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={[styles.textInput, styles.passwordInput]}
+                placeholder="Create a password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={true}
+                autoCapitalize="none"
+              />
+              <TouchableOpacity 
+                style={styles.passwordToggle}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <Ionicons 
+                  name={showPassword ? "eye-off" : "eye"} 
+                  size={20} 
+                  color="#6B7280" 
+                />
+            </TouchableOpacity>
+            </View>
           </View>
       </ScrollView>
       </SafeAreaView>
@@ -184,5 +199,15 @@ const styles = StyleSheet.create({
   },
   passwordInput: {
     paddingRight: 55,
+  },
+  passwordToggle: {
+    position: 'absolute',
+    right: 20,
+    top: 18, 
+    padding: 5,
+  },
+  inputContainer: {
+    position: 'relative',
+    marginBottom: 16,
   },
 });
