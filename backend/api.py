@@ -62,7 +62,9 @@ def root():
 @app.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
-    existing_user = db.query(User).filter(User.email == user.email).first()
+    username_to_use = user.username or user.email.split('@')[0]
+
+    existing_user = db.query(User).filter(or_(User.email == user.email, User.username == username_to_use)).first()
 
     if existing_user:
         if existing_user.email == user.email:
@@ -80,8 +82,8 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
         password_hash=hashed_password,
         first_name=user.first_name,
         last_name=user.last_name,
-        username=user.username or user.email.split('@')[0]
-        email_verified = False,
+        username=username_to_use
+        email_verified=False,
         is_active=True
     )
 
@@ -91,7 +93,7 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
         db.refresh(db_user)
         return db_user
     except Exception as e:
-        db.rolllback()
+        db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to create user"
