@@ -31,12 +31,18 @@ class UserCreate(BaseModel):
     first_name: str
     last_name: str
     username: Optional[str] = None
+    email_verified: bool
+    is_active: bool
+    created_at: datetime
 
 class UserResponse(BaseModel):
     user_id: uuid.UUID
     email: str
     first_name: str
     last_name: str
+    username: Optional[str]
+    email_verified: bool
+    is_active: bool
     created_at: datetime
     
     class Config:
@@ -51,7 +57,7 @@ def get_db():
 
 @app.get("/")
 def root():
-    return {"RhythmiIQ API"}
+    return {"message" : "Momentum API"}
 
 @app.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreate, db: Session = Depends(get_db)):
