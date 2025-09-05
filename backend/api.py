@@ -55,9 +55,17 @@ def root():
 
 @app.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreate, db: Session = Depends(get_db)):
+
     existing_user = db.query(User).filter(User.email == user.email).first()
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+
+    if existing_user:
+        if existing_user.email == user.email:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Username already taken"
+            )
 
     hashed_password = pwd_context.hash(user.password)
 
@@ -67,7 +75,8 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
         first_name=user.first_name,
         last_name=user.last_name,
         username=user.username or user.email.split('@')[0]
-        email_verified
+        email_verified = False,
+        is_active=True
     )
 
     try:
