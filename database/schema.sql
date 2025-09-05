@@ -171,6 +171,32 @@ INSERT INTO trend_directions (direction, value) VALUES
 ('declining', 2),
 ('stable', 3);
 
+CREATE TABLE user_insights (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    frequency_id INTEGER NOT NULL REFERENCES frequency_patterns(id),
+    
+    period_start DATE NOT NULL,
+    period_end DATE NOT NULL,
+    
+    total_habits INTEGER NOT NULL,
+    active_habits INTEGER NOT NULL,
+    overall_completion_rate DECIMAL(5,4),
+    total_streak_days INTEGER DEFAULT 0,
+    
+    most_productive_day INTEGER, 
+    most_productive_time INTEGER, 
+    avg_mood DECIMAL(3,2),
+    
+    achievement_level VARCHAR(20) CHECK (achievement_level IN ('excellent', 'good', 'needs_improvement')),
+    primary_challenge VARCHAR(50),
+    key_strength VARCHAR(50),
+    
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    
+    UNIQUE(user_id, frequency_id, period_start)
+);
+
 CREATE TABLE goals (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
