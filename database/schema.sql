@@ -197,6 +197,27 @@ CREATE TABLE user_insights (
     UNIQUE(user_id, frequency_id, period_start)
 );
 
+CREATE TABLE habit_recommendations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    habit_id UUID REFERENCES habits(id) ON DELETE CASCADE,
+    category_id INTEGER REFERENCES categories(id), 
+    
+    recommendation_type VARCHAR(30) NOT NULL CHECK (recommendation_type IN ('timing', 'difficulty', 'frequency', 'category', 'general')),
+    title VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    confidence_score DECIMAL(3,2) CHECK (confidence_score BETWEEN 0.00 AND 1.00),
+    
+    algorithm_version VARCHAR(20) DEFAULT 'rule_based_v1',
+    
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP WITH TIME ZONE,
+    
+    user_response VARCHAR(20) CHECK (user_response IN ('accepted', 'dismissed', 'postponed')),
+    responded_at TIMESTAMP WITH TIME ZONE
+);
+
 CREATE TABLE goals (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
