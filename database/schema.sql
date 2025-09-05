@@ -105,6 +105,7 @@ CREATE TABLE habits (
     
     target_count INTEGER DEFAULT 1,
     reminder_time TIME,
+    difficulty_level INTEGER DEFAULT 3 CHECK (difficulty_level BETWEEN 1 AND 5),
     
     streak_count INTEGER DEFAULT 0,
     best_streak INTEGER DEFAULT 0,
@@ -120,10 +121,13 @@ CREATE TABLE habit_completions (
     habit_id UUID NOT NULL REFERENCES habits(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     
+    mood_rating INTEGER CHECK (mood_rating BETWEEN 1 AND 5);
     completed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     completion_date DATE NOT NULL,
     quantity INTEGER DEFAULT 1,
     notes TEXT,
+    completion_time TIME;
+    duration_minutes INTEGER;
     
     UNIQUE(habit_id, completion_date)
 );
