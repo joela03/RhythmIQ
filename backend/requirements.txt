@@ -8,3 +8,7 @@ pydantic
 email-validator
 pytest
 httpx
+torch
+pandas
+numpy
+scikit-learn
