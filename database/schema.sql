@@ -121,16 +121,55 @@ CREATE TABLE habit_completions (
     habit_id UUID NOT NULL REFERENCES habits(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     
-    mood_rating INTEGER CHECK (mood_rating BETWEEN 1 AND 5);
+    mood_rating INTEGER CHECK (mood_rating BETWEEN 1 AND 5),
     completed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     completion_date DATE NOT NULL,
     quantity INTEGER DEFAULT 1,
     notes TEXT,
-    completion_time TIME;
-    duration_minutes INTEGER;
+    completion_time TIME,
+    duration_minutes INTEGER,
     
     UNIQUE(habit_id, completion_date)
 );
+
+CREATE TABLE habit_insights (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    habit_id UUID NOT NULL REFERENCES habits(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    
+    frequency_id INTEGER REFERENCES frequency_patterns(id);
+    period_start DATE NOT NULL,
+    period_end DATE NOT NULL,
+    
+    total_expected INTEGER NOT NULL,
+    total_completed INTEGER NOT NULL,
+    completion_rate DECIMAL(5,4) NOT NULL,
+    current_streak INTEGER DEFAULT 0,
+    longest_streak INTEGER DEFAULT 0,
+    
+    best_day_of_week INTEGER,
+    best_time_slot INTEGER, 
+    avg_mood DECIMAL(3,2),
+    
+    trend_direction_id INTEGER REFERENCES trend_directions(id),
+    vs_previous_period DECIMAL(5,4),
+    
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    
+    UNIQUE(habit_id, frequency_id, period_start),
+);
+
+CREATE TABLE trend_directions (
+    id SERIAL PRIMARY KEY,
+    direction VARCHAR(10) NOT NULL UNIQUE,
+    value INTEGER NOT NULL UNIQUE
+);
+
+INSERT INTO trend_directions (direction, value) VALUES
+('improving', 1),
+('declining', 2),
+('stable', 3);
 
 CREATE TABLE goals (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
