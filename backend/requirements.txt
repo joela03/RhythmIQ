@@ -12,3 +12,5 @@ torch
 pandas
 numpy
 scikit-learn
+backend
+bcrypt
