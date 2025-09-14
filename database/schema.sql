@@ -302,4 +302,11 @@ CREATE INDEX idx_categories_type ON categories(type);
 
 ALTER TABLE users ADD COLUMN email_verified BOOLEAN DEFAULT false;
 ALTER TABLE users ADD COLUMN google_refresh_token TEXT; 
-ALTER TABLE users ADD COLUMN display_name VARCHAR(150); 
+ALTER TABLE users ADD COLUMN display_name VARCHAR(150);
+ALTER TABLE users 
+ALTER COLUMN first_name DROP NOT NULL,
+ALTER COLUMN last_name DROP NOT NULL;
+
+-- Add onboarding status tracking
+ALTER TABLE users 
+ADD COLUMN onboarding_completed BOOLEAN DEFAULT FALSE;
