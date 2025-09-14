@@ -31,7 +31,7 @@ export default function SignUp() {
     return emailRegex.test(email);
   };
 
-  const handleEmailSignUp = () => {
+  const handleEmailSignUp = async () => {
       setEmailError('');
       setIsLoading(true);
       
@@ -70,7 +70,7 @@ export default function SignUp() {
         const data = await response.json();
 
           if (response.ok) {
-            await handleLoginAfterSignup(email.trim(), password);
+            await handleLogin(email.trim(), password);
           } else {
             setEmailError(data.detail || 'Signup failed. Please try again.');
           }
@@ -81,6 +81,34 @@ export default function SignUp() {
           setIsLoading(false);
         }
       }
+    const handleLogin = async (email: string, password: string) => {
+      try {
+        const API_URL = 'http://localhost:80';
+
+        const formData = new FormData();
+        formData.append('username', email);
+        formData.append('password', password);
+
+        const response = await fetch(`${API_URL}/login`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          await AsyncStorage.setItem('access_token', data.access_token);
+          await AsyncStorage.setItem('user_data', JSON.stringify(data.user));
+          
+          console.log('Login successful:', data.user);
+        } else {
+          setEmailError(data.detail || 'Login failed. Please try again.');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        setEmailError('Network error. Please check your connection.');
+      }
+      };
     };
 
   return (
