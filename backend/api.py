@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi import FastAPI, HTTPException, Depends, status, Request
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
@@ -55,6 +55,15 @@ class UserResponse(BaseModel):
         orm_mode = True
         from_attributes = True
 
+class GoogleSignupRequest(BaseModel):
+    google_id: str
+    email: EmailStr
+    first_name: str
+    last_name: str
+    display_name: Optional[str] = None
+    profile_picture_url: Optional[str] = None
+    google_refresh_token: Optional[str] = None
+
 def get_db():
     db = SessionLocal()
     try:
@@ -106,3 +115,38 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
             detail="Failed to create user"
         )
 
+@app.post("/auth/google", response_model=UserResponse)
+async def google_signup(request: GoogleSignupRequest, db: Session = Depends(get_db)):
+    # Check if user already exists with this google_id
+    existing_user = db.query(User).filter(
+        or_(User.google_id == request.google_id, User.email == request.email)
+    ).first()
+
+    if existing_user:
+        if request.google_id and not existing_user.google_id:
+            existing_user.google_id = request.google_id
+        if request.google_refresh_token:
+            existing_user.google_refresh_token = request.google_refresh_token
+        if request.profile_picture_url:
+            existing_user.profile_picture_url = request.profile_picture_url
+        
+        db.commit()
+        db.refresh(existing_user)
+        return existing_user
+    
+    db_user = User(
+        google_id=request.google_id,
+        email=request.email,
+        first_name=request.first_name,
+        last_name=request.last_name,
+        display_name=request.display_name,
+        profile_picture_url=request.profile_picture_url,
+        google_refresh_token=request.google_refresh_token,
+        email_verified=True, 
+        is_active=True
+    )
+    
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
