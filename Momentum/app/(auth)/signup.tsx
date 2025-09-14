@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Constants from 'expo-constants'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { 
   View,
   Text,
@@ -54,7 +55,7 @@ export default function SignUp() {
         const response = await fetch (`${API_URL}/signup`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application-json',
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             email: email.trim(),
