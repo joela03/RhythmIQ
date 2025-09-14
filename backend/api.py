@@ -6,6 +6,7 @@ from datetime import datetime
 from sqlalchemy import create_engine, or_, CheckConstraint
 from sqlalchemy.orm import sessionmaker, Session
 from models import Base, User
+from auth import get_current_active_user
 import uuid
 from passlib.context import CryptContext
 from dotenv import load_dotenv
@@ -63,6 +64,12 @@ class GoogleSignupRequest(BaseModel):
     display_name: Optional[str] = None
     profile_picture_url: Optional[str] = None
     google_refresh_token: Optional[str] = None
+
+class UserUpdate(BaseModel):
+    first_name: Optional[str] = Field(None, min_length=1, max_length=50)
+    last_name: Optional[str] = Field(None, min_length=1, max_length=50)
+    username: Optional[str] = Field(None, min_length=3, max_length=50)
+    display_name: Optional[str] = None
 
 def get_db():
     db = SessionLocal()
@@ -156,3 +163,25 @@ async def google_signup(request: GoogleSignupRequest, db: Session = Depends(get_
     db.commit()
     db.refresh(db_user)
     return db_user
+
+@app.patch("/users/me", response_model=UserResponse)
+async def update_user_profile(
+    update_data: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+
+    update_dict = update_data.dict(exclude_unset=True)
+    for field, value in update_dict.items():
+        setattr(current_user, field, value)
+    
+    try:
+        db.commit()
+        db.refresh(current_user)
+        return current_user
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update user"
+        )
