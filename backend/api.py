@@ -123,12 +123,18 @@ async def google_signup(request: GoogleSignupRequest, db: Session = Depends(get_
     ).first()
 
     if existing_user:
+        # Update information if not already stored
         if request.google_id and not existing_user.google_id:
             existing_user.google_id = request.google_id
-        if request.google_refresh_token:
-            existing_user.google_refresh_token = request.google_refresh_token
+        if request.first_name and not existing_user.first_name:
+            existing_user.first_name = request.first_name
+        if request.last_name and not existing_user.last_name:
+            existing_user.last_name = request.last_name
         if request.profile_picture_url:
             existing_user.profile_picture_url = request.profile_picture_url
+        # Update refresh token on new sign in
+        if request.google_refresh_token:
+            existing_user.google_refresh_token = request.google_refresh_token
         
         db.commit()
         db.refresh(existing_user)
