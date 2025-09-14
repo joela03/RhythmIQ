@@ -22,6 +22,7 @@ class User(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     last_login = Column(DateTime(timezone=True))
     is_active = Column(Boolean, server_default=expression.true())
+    email_verified = Column(Boolean, server_default=expression.false())
 
     __table_args__ = (
         {'check_constraint': '(password_hash IS NOT NULL) OR (google_id IS NOT NULL)'},
