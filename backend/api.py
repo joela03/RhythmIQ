@@ -3,9 +3,9 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
 from datetime import datetime
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, or_
 from sqlalchemy.orm import sessionmaker, Session
-from backend.models import Base, User
+from models import Base, User
 import uuid
 from passlib.context import CryptContext
 from dotenv import load_dotenv
@@ -82,7 +82,7 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
         password_hash=hashed_password,
         first_name=user.first_name,
         last_name=user.last_name,
-        username=username_to_use
+        username=username_to_use,
         email_verified=False,
         is_active=True
     )
