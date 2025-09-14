@@ -37,15 +37,15 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    first_name: str
-    last_name: str
-    username: Optional[str] = None
+    first_name: Optional[str] = Field(None, min_length=1, max_length=50)
+    last_name: Optional[str] = Field(None, min_length=1, max_length=50)
+    username: Optional[str] = Field(None, min_length=1, max_length=50)
 
 class UserResponse(BaseModel):
     user_id: uuid.UUID
     email: str
-    first_name: str
-    last_name: str
+    first_name: Optional[str]  
+    last_name: Optional[str]
     username: Optional[str]
     email_verified: bool
     is_active: bool
@@ -58,8 +58,8 @@ class UserResponse(BaseModel):
 class GoogleSignupRequest(BaseModel):
     google_id: str
     email: EmailStr
-    first_name: str
-    last_name: str
+    first_name: Optional[str] = Field(None, min_length=1, max_length=50)
+    last_name: Optional[str] = Field(None, min_length=1, max_length=50)
     display_name: Optional[str] = None
     profile_picture_url: Optional[str] = None
     google_refresh_token: Optional[str] = None
