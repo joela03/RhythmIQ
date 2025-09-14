@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Constants from 'expo-constants'
 import { 
   View,
   Text,
@@ -28,6 +29,54 @@ export default function SignUp() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
+  const handleEmailSignUp = () => {
+      setEmailError('');
+      
+      if (!email.trim()) {
+        setEmailError('Please enter your email address');
+        return;
+      }
+      
+      if (!validateEmail(email)) {
+        setEmailError('Please enter a valid email address');
+        return;
+      }
+      
+      if (password.length < 8) {
+        setEmailError('Password must be at least 6 characters');
+        return;
+      }
+  
+      try {
+        const API_URL = 'http://localhost:8000';
+
+        const response = await fetch (`${API_URL}/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application-json',
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+            password: password,
+          }),
+        });
+        
+        const data = await response.json();
+
+          if (response.ok) {
+            Alert.alert('Success', 'Account created! Redirecting...')
+          } else {
+            setEmailError(data.detail || 'Signup failed. Please try again.');
+          }
+        } catch (error) {
+          console.error('Signup error:', error);
+          setEmailError('Network error. Please check your connection.');
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
 
   return (
     <KeyboardAvoidingView
