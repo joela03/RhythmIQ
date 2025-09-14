@@ -37,16 +37,19 @@ export default function SignUp() {
       
       if (!email.trim()) {
         setEmailError('Please enter your email address');
+        setIsLoading(false);
         return;
       }
       
       if (!validateEmail(email)) {
         setEmailError('Please enter a valid email address');
+        setIsLoading(false);
         return;
       }
       
       if (password.length < 8) {
         setEmailError('Password must be at least 6 characters');
+        setIsLoading(false);
         return;
       }
   
