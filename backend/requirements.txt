@@ -14,3 +14,4 @@ numpy
 scikit-learn
 backend
 bcrypt
+jose
