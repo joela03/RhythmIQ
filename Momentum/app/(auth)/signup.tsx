@@ -33,6 +33,7 @@ export default function SignUp() {
 
   const handleEmailSignUp = () => {
       setEmailError('');
+      setIsLoading(true);
       
       if (!email.trim()) {
         setEmailError('Please enter your email address');
@@ -66,7 +67,7 @@ export default function SignUp() {
         const data = await response.json();
 
           if (response.ok) {
-            Alert.alert('Success', 'Account created! Redirecting...')
+            await handleLoginAfterSignup(email.trim(), password);
           } else {
             setEmailError(data.detail || 'Signup failed. Please try again.');
           }
