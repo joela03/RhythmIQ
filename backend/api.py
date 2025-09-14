@@ -40,7 +40,6 @@ class UserCreate(BaseModel):
     first_name: str
     last_name: str
     username: Optional[str] = None
-    created_at: datetime
 
 class UserResponse(BaseModel):
     user_id: uuid.UUID
