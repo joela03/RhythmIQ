@@ -3,21 +3,30 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
 from datetime import datetime
-from sqlalchemy import create_engine, or_
+from sqlalchemy import create_engine, or_, CheckConstraint
 from sqlalchemy.orm import sessionmaker, Session
 from models import Base, User
 import uuid
 from passlib.context import CryptContext
 from dotenv import load_dotenv
 import os
+from urllib.parse import quote_plus
 
 load_dotenv()
 
+db_user = os.getenv('DB_USER')
+db_password = os.getenv('DB_PASSWORD')
+db_host = os.getenv('DB_HOST')
+db_port = os.getenv('DB_PORT')
+db_name = os.getenv('DB_NAME')
+
 app = FastAPI()
 
+encoded_password = quote_plus(db_password) if db_password else ""
+
 SQLALCHEMY_DATABASE_URL = (
-    f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
-    f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    f"postgresql://{db_user}:{encoded_password}"
+    f"@{db_host}:{db_port}/{db_name}"
 )
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -31,8 +40,6 @@ class UserCreate(BaseModel):
     first_name: str
     last_name: str
     username: Optional[str] = None
-    email_verified: bool
-    is_active: bool
     created_at: datetime
 
 class UserResponse(BaseModel):
@@ -47,6 +54,7 @@ class UserResponse(BaseModel):
     
     class Config:
         orm_mode = True
+        from_attributes = True
 
 def get_db():
     db = SessionLocal()
