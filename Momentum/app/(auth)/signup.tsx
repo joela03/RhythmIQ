@@ -145,8 +145,8 @@ export default function SignUp() {
               </View>
             </TouchableOpacity>
           </View>
-          <View>
-            <View>
+          <View style={styles.emailSection}>
+            <View style={styles.inputContainer}>
               <TextInput
                 style={styles.textInput}
                 placeholder="Enter your email"
@@ -191,7 +191,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   scrollContent: {
-    flexGrow: 1, 
+    flexGrow: 1,
+    paddingHorizontal: 24,
     justifyContent: 'center', 
     alignItems: 'center',
   },
@@ -267,13 +268,20 @@ const styles = StyleSheet.create({
   },
   socialSection: {
     marginBottom: 30,
+    width: '100%',
   },
   googleButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderWidth: 1,
     borderColor: 'rgba(139, 92, 246, 0.1)',
+    width: '100%',
   },
-    textInput: {
+  
+  emailSection: {
+    marginBottom: 30,
+    width: '100%',
+  },
+  textInput: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 16,
     paddingVertical: 16,
