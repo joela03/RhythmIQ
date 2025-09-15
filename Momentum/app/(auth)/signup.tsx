@@ -165,7 +165,7 @@ export default function SignUp() {
                 placeholderTextColor="#9CA3AF"
                 value={password}
                 onChangeText={setPassword}
-                secureTextEntry={true}
+                secureTextEntry={!showPassword}
                 autoCapitalize="none"
               />
               <TouchableOpacity 
