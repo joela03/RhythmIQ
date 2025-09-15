@@ -81,6 +81,7 @@ export default function SignUp() {
           setIsLoading(false);
         }
       }
+
     const handleLogin = async (email: string, password: string) => {
       try {
         const API_URL = 'http://localhost:80';
@@ -109,7 +110,7 @@ export default function SignUp() {
         setEmailError('Network error. Please check your connection.');
       }
       };
-    };
+
 
   return (
     <KeyboardAvoidingView
@@ -136,7 +137,7 @@ export default function SignUp() {
               </Text>
             </View>
           </View>
-          <View>
+          <View style={styles.socialSection}>
             <TouchableOpacity style={styles.socialButton}>
               <View style={styles.socialButtonContent}>
                 <Ionicons name="logo-google" size={20} color="#4285F4"/>
@@ -263,6 +264,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#374151',
     marginLeft: 12,
+  },
+  socialSection: {
+    marginBottom: 30,
   },
   googleButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
