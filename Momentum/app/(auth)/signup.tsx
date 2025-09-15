@@ -162,6 +162,7 @@ export default function SignUp() {
               <TextInput
                 style={[styles.textInput, styles.passwordInput]}
                 placeholder="Create a password"
+                placeholderTextColor="#9CA3AF"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={true}
@@ -276,7 +277,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(139, 92, 246, 0.1)',
     width: '100%',
   },
-  
+
   emailSection: {
     marginBottom: 30,
     width: '100%',
@@ -302,7 +303,7 @@ const styles = StyleSheet.create({
   passwordToggle: {
     position: 'absolute',
     right: 20,
-    top: 18, 
+    top: 10, 
     padding: 5,
   },
   inputContainer: {
