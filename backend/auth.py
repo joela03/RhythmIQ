@@ -1,9 +1,9 @@
-from jose import JWTError, jwt
+import jwt
+from jwt.exceptions import InvalidTokenError as JWTError
 from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from database import get_db
 from models import User
 import os
 from dotenv import load_dotenv
@@ -28,8 +28,9 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 
 async def get_current_user(
     token: str = Depends(oauth2_scheme), 
-    db: Session = Depends(get_db)
+    db: Session = Depends(lambda: get_db())
 ):
+    from .api import get_db
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
