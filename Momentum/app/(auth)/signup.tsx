@@ -158,7 +158,10 @@ export default function SignUp() {
                 placeholder="Enter your email"
                 placeholderTextColor="#9CA3AF"
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  if (!emailError) setEmailError('');
+                }}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -170,7 +173,10 @@ export default function SignUp() {
                 placeholder="Create a password"
                 placeholderTextColor="#9CA3AF"
                 value={password}
-                onChangeText={setPassword}
+                onChangeText= {(text) => {
+                  setPassword(text);
+                  if (emailError) setEmailError('');
+                }}
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
               />
