@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Constants from 'expo-constants'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { 
+  Alert,
   View,
   Text,
   SafeAreaView,
@@ -54,7 +55,7 @@ export default function SignUp() {
       }
   
       try {
-        const API_URL = 'http://localhost:8000';
+        const API_URL = 'http://localhost:80';
 
         const response = await fetch (`${API_URL}/signup`, {
           method: 'POST',
@@ -70,6 +71,7 @@ export default function SignUp() {
         const data = await response.json();
 
           if (response.ok) {
+            Alert.alert(('Successful response'))
             await handleLogin(email.trim(), password);
           } else {
             setEmailError(data.detail || 'Signup failed. Please try again.');
