@@ -14,4 +14,5 @@ numpy
 scikit-learn
 backend
 bcrypt
-jose
+PyJWT
+pythonmultipart
