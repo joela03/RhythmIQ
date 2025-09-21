@@ -190,6 +190,7 @@ export default function SignUp() {
               <TouchableOpacity 
                 style={styles.passwordToggle}
                 onPress={() => setShowPassword(!showPassword)}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
                 <Ionicons 
                   name={showPassword ? "eye-off" : "eye"} 
