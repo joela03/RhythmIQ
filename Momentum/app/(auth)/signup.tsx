@@ -179,6 +179,30 @@ export default function SignUp() {
                 />
             </TouchableOpacity>
             </View>
+            <TouchableOpacity 
+              style={[
+                styles.emailButton,
+                (!email || !password || isLoading) && styles.emailButtonDisabled // Conditional styling
+              ]}
+              onPress={handleEmailSignUp}
+              disabled={!email || !password || isLoading}
+              activeOpacity={0.8}
+            >
+              <LinearGradient
+                colors={(!email || !password || isLoading) 
+                  ? ['#E5E7EB', '#D1D5DB']
+                  : ['#7c3aed', '#8b5cf6']
+                }
+                style={styles.emailButtonGradient}
+              >
+                <Text style={[
+                  styles.emailButtonText,
+                  (!email || !password || isLoading) && styles.emailButtonTextDisabled
+                ]}>
+                  {isLoading ? 'Creating Account...' : 'Continue with Email'}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
       </ScrollView>
       </SafeAreaView>
@@ -309,5 +333,48 @@ const styles = StyleSheet.create({
   inputContainer: {
     position: 'relative',
     marginBottom: 16,
+  },
+  primaryButton: {
+    width: width - 48,
+    marginBottom: 20,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+
+  emailButton: {
+    borderRadius: 16,
+    shadowColor: '#7c3aed',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  
+  emailButtonDisabled: {
+    shadowOpacity: 0.1, 
+  },
+  
+  emailButtonGradient: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    alignItems: 'center',
+  },
+  
+  emailButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  
+  emailButtonTextDisabled: {
+    color: 'rgba(255, 255, 255, 0.7)',
   },
 });
