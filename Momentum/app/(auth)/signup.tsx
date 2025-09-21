@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   brandAccent: {
     width: 40,
     height: 3,
-    color: '#7c3aed',
+    backgroundColor: '#7c3aed',
     borderRadius: 2,
     marginTop: 5,
   },
