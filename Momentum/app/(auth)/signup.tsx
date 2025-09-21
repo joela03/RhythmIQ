@@ -146,6 +146,12 @@ export default function SignUp() {
             </TouchableOpacity>
           </View>
           <View style={styles.emailSection}>
+            {emailError ? (
+              <View style ={styles.errorContainer}>
+                <Ionicons name="alert-circle" size={16} color="#EF4444" />
+                <Text style={styles.errorText}>{emailError}</Text>
+              </View>
+            ) : null}
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.textInput}
@@ -320,6 +326,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
+  },
+    errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  errorText: {
+    color: '#EF4444',
+    fontSize: 14,
+    fontWeight: '500',
+    marginLeft: 8,
+    flex: 1,
   },
   passwordInput: {
     paddingRight: 55,
