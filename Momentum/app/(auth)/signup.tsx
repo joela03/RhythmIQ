@@ -88,28 +88,33 @@ export default function SignUp() {
       try {
         const API_URL = 'http://localhost:80';
 
-        const formData = new FormData();
+        const formData = new URLSearchParams();
         formData.append('username', email);
         formData.append('password', password);
 
         const response = await fetch(`${API_URL}/login`, {
           method: 'POST',
-          body: formData,
+          headers: {
+            'Content-type': 'applications/x-www-form-urlencoded',
+          },
+          body: formData.toString()
         });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || 'Login failed');
+        }
 
         const data = await response.json();
 
-        if (response.ok) {
-          await AsyncStorage.setItem('access_token', data.access_token);
-          await AsyncStorage.setItem('user_data', JSON.stringify(data.user));
-          
-          console.log('Login successful:', data.user);
-        } else {
-          setEmailError(data.detail || 'Login failed. Please try again.');
-        }
-      } catch (error) {
+        await AsyncStorage.setItem('access_token', data.access_token);
+        await AsyncStorage.setItem('user_data', JSON.stringify(data.user));
+
+        Alert.alert("Login successfull")
+        //  router.push(...);
+      } catch (error: any) {
         console.error('Login error:', error);
-        setEmailError('Network error. Please check your connection.');
+        setEmailError(error.message || 'Network error. Please check your connection.');
       }
       };
 
