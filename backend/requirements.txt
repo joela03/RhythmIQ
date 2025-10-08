@@ -16,3 +16,4 @@ backend
 bcrypt
 PyJWT
 pythonmultipart
+pandas
