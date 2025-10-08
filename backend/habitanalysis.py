@@ -111,6 +111,41 @@ class HabitPredictionLSTM(nn.Module):
         
         return df
 
+    def engineer_features(self, df):
+        """ Create additional time-series features"""
+
+        # Rolling statistics (7-day and 30-day windows)
+        df['completed_7d_avg'] = df['completed'].rolling(7, min_periods=1).mean()
+        df['completed_30d_avg'] = df['completed'].rolling(30, min_periods=1).mean()
+        df['completed_7d_sum'] = df['completed'].rolling(7, min_periods=1).sum()
+        
+        # Streak calculation
+        df['current_streak'] = (df['completed'] > 0).groupby(
+            (df['completed'] == 0).cumsum()
+        ).cumsum()
+        
+        # Days since last completion
+        last_completion_idx = df[df['completed'] > 0].index
+        df['days_since_last'] = 0
+        for i in range(len(df)):
+            if i in last_completion_idx:
+                df.loc[i, 'days_since_last'] = 0
+            elif i > 0:
+                df.loc[i, 'days_since_last'] = df.loc[i-1, 'days_since_last'] + 1
+        
+        # Cyclical encoding for day of week
+        df['day_of_week_sin'] = np.sin(2 * np.pi * df['day_of_week'] / 7)
+        df['day_of_week_cos'] = np.cos(2 * np.pi * df['day_of_week'] / 7)
+        
+        # Cyclical encoding for day of month
+        df['day_of_month_sin'] = np.sin(2 * np.pi * df['day_of_month'] / 31)
+        df['day_of_month_cos'] = np.cos(2 * np.pi * df['day_of_month'] / 31)
+        
+        # Check if previous day was completed (binary output)
+        df['prev_day_completed'] = df['completed'].shift(1).fillna(0)
+        
+        return df
+
     def forward(self, x)
 
         lstm_out, _ = self.lstm(x)
