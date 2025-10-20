@@ -1,9 +1,14 @@
 import torch
-import psycopg2
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+import numpy as np
 import pandas as pd
+from datetime import datetime, timedelta
+from sklearn.preprocessing import StandardScaler
+import psycopg2
 
 class HabitDataset(Dataset):
-    def __init__(self, features, targets, sequence_length=7):
+    def __init__(self, features, targets):
         self.features = torch.FloatTensor(features)
         self.targets = torch.FloatTensor(targets)
         self.sequence_length = sequence_length
@@ -17,27 +22,28 @@ class HabitDataset(Dataset):
             self.targets[idx+self.sequence_length-1]
         )
 
-class HabitPredictionLSTM(nn.Module):
+class HabitPredictionLSTM:
     """LSTM model for habit completion prediction"""
 
-    def __init__(self, input_size, hidden_size=64, num_layers=2, dropout=0.2):
-        super(HabitPredictionLSTM, self).__init__()
+    def __init__(self, input_size, hidden_sizes=[64, 32, 16], dropout=0.2):
+        super(HabitLSTM, self).__init__()
 
-        self.hidden_size = hidden_size
-        self.num_layers = num_layers
+        self.lstm1 = nn.LSTM(input_size, hidden_sizes[0], batch_first=True)
+        self.dropout1 = nn.Dropout(dropout)
 
-        self.lstm = nn.LSTM(
-            input_size=input_size,
-            hidden_size=hidden_size,
-            num_layers=num_layers,
-            dropout=dropout if num_layers > 1 else 0,
-            batch_first=True
-        )
+        self.lstm2 = nn.LSTM(hidden_sizes[0], hidden_sizes[1], batch_first=True)
+        self.dropout2 = nn.Dropout(dropout)
+    
+        self.lstm2 = nn.LSTM(hidden_sizes[2], hidden_sizes[2], batch_first=True)
+        self.dropout2 = nn.Dropout(dropout)
 
-        self.dropout = nn.Dropout(dropout)
-        self.fc1 = nn.Linear(hidden_size, 32)
-        self.fc2 = nn.Linear(32, 1)
-        self.sigmoid = nn.Sigmoid()
+        self.fc1 = nn.Linear(hidden_sizes[2], 16)
+        self.fc2 = nn.Linear(16, 8)
+        self.fc3 = nn.Linear(8, 1)
+
+        self.relu = nn.ReLU()
+        self.sigmoid = nn.sigmoid()
+        self.droput4 = nn.Dropout(dropout)
     
     def extract_features_from_db(self, conn, user_id, habit_id, end_date=None):
         """Extract feature sequences from PostgreSQL database and returns DataFrame
