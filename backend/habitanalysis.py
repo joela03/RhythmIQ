@@ -43,7 +43,7 @@ class HabitPredictionLSTM:
 
         self.relu = nn.ReLU()
         self.sigmoid = nn.sigmoid()
-        self.droput4 = nn.Dropout(dropout)
+        self.dropout4 = nn.Dropout(dropout)
     
     def extract_features_from_db(self, conn, user_id, habit_id, end_date=None):
         """Extract feature sequences from PostgreSQL database and returns DataFrame
@@ -154,13 +154,25 @@ class HabitPredictionLSTM:
 
     def forward(self, x)
 
-        lstm_out, _ = self.lstm(x)
+        lstm_out, _ = self.lstm1(x)
+        lstm_out = self.dropout1(lstm_out)
+
+        lstm_out, _ = self.lstm2(x)
+        lstm_out = self.dropout2(lstm_out)
+
+        lstm_out, _ = self.lstm3(x)
+        lstm_out = self.dropout3(lstm_out)
 
         last_output = lstm_out[:, -1, :]
 
-        out = self.dropout(last_output)
-        out = torch.relu(self.fc1(out))
-        out = self.droput(out)
-        out = self.sigmoid(self.fc2(out))
+        out = self.fc1(last_output)
+        out = self.relu(out)
+        out = self.dropout4(out)
+
+        out = self.fc2(out)
+        out = self.relu(out)
+
+        out = self.fc3(out)
+        out = self.sigmoid(out)
 
         return out
