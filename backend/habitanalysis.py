@@ -14,12 +14,12 @@ class HabitDataset(Dataset):
         self.sequence_length = sequence_length
 
     def __len__(self):
-        return len(self.features) - self.sequence_length + 1
+        return len(self.features)
 
     def __getitem__(self, idx):
         return (
-            self.features[idx:idx+self.sequence_length], 
-            self.targets[idx+self.sequence_length-1]
+            self.features[idx], 
+            self.targets[idx]
         )
 
 class HabitPredictionLSTM:
@@ -44,6 +44,41 @@ class HabitPredictionLSTM:
         self.relu = nn.ReLU()
         self.sigmoid = nn.sigmoid()
         self.dropout4 = nn.Dropout(dropout)
+
+    def forward(self, x)
+
+        lstm_out, _ = self.lstm1(x)
+        lstm_out = self.dropout1(lstm_out)
+
+        lstm_out, _ = self.lstm2(x)
+        lstm_out = self.dropout2(lstm_out)
+
+        lstm_out, _ = self.lstm3(x)
+        lstm_out = self.dropout3(lstm_out)
+
+        last_output = lstm_out[:, -1, :]
+
+        out = self.fc1(last_output)
+        out = self.relu(out)
+        out = self.dropout4(out)
+
+        out = self.fc2(out)
+        out = self.relu(out)
+
+        out = self.fc3(out)
+        out = self.sigmoid(out)
+
+        return out
+
+class HabitCompletionPredictor:
+    """Main predictor class"""
+    
+    def __init__(self, sequence_length=30, features_dim=16):
+        self.sequence_length = sequence_length
+        self.features_dim = features_dim
+        self.model = None
+        self.scaler = StandardScaler()
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     def extract_features_from_db(self, conn, user_id, habit_id, end_date=None):
         """Extract feature sequences from PostgreSQL database and returns DataFrame
@@ -151,28 +186,92 @@ class HabitPredictionLSTM:
         df['prev_day_completed'] = df['completed'].shift(1).fillna(0)
         
         return df
-
-    def forward(self, x)
-
-        lstm_out, _ = self.lstm1(x)
-        lstm_out = self.dropout1(lstm_out)
-
-        lstm_out, _ = self.lstm2(x)
-        lstm_out = self.dropout2(lstm_out)
-
-        lstm_out, _ = self.lstm3(x)
-        lstm_out = self.dropout3(lstm_out)
-
-        last_output = lstm_out[:, -1, :]
-
-        out = self.fc1(last_output)
-        out = self.relu(out)
-        out = self.dropout4(out)
-
-        out = self.fc2(out)
-        out = self.relu(out)
-
-        out = self.fc3(out)
-        out = self.sigmoid(out)
-
-        return out
+    
+    def prepare_sequences(self, df):
+        """Create sliding window sequences"""
+        feature_columns = [
+            'completed', 'mood', 'duration', 'day_of_week_sin', 'day_of_week_cos',
+            'day_of_month_sin', 'day_of_month_cos', 'target_count', 
+            'difficulty_level', 'completed_7d_avg', 'completed_30d_avg',
+            'current_streak', 'days_since_last', 'prev_day_completed',
+            'days_interval', 'times_per_period'
+        ]
+        
+        data = df[feature_columns].values
+        data_scaled = self.scaler.fit_transform(data)
+        
+        X, y = [], []
+        for i in range(len(data_scaled) - self.sequence_length):
+            X.append(data_scaled[i:i + self.sequence_length])
+            y.append(df['completed'].iloc[i + self.sequence_length])
+        
+        return np.array(X), np.array(y)
+    
+    def build_model(self):
+        """Build the LSTM model"""
+        self.model = HabitLSTM(
+            input_size=self.features_dim,
+            hidden_sizes=[64, 32, 16],
+            dropout=0.2
+        ).to(self.device)
+        
+        self.criterion = nn.BCELoss()
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
+        
+        return self.model
+    
+    def train(self, X_train, y_train, X_val=None, y_val=None, 
+              epochs=50, batch_size=32):
+        """Train the model"""
+        if self.model is None:
+            self.build_model()
+        
+        train_dataset = HabitDataset(X_train, y_train)
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+        
+        for epoch in range(epochs):
+            self.model.train()
+            total_loss = 0
+            
+            for batch_X, batch_y in train_loader:
+                batch_X = batch_X.to(self.device)
+                batch_y = batch_y.to(self.device).unsqueeze(1)
+                
+                self.optimizer.zero_grad()
+                outputs = self.model(batch_X)
+                loss = self.criterion(outputs, batch_y)
+                
+                loss.backward()
+                self.optimizer.step()
+                
+                total_loss += loss.item()
+            
+            if epoch % 10 == 0:
+                print(f"Epoch {epoch}: Loss = {total_loss/len(train_loader):.4f}")
+    
+    def predict(self, X):
+        """Make predictions"""
+        self.model.eval()
+        X_tensor = torch.FloatTensor(X).to(self.device)
+        
+        with torch.no_grad():
+            predictions = self.model(X_tensor)
+        
+        return predictions.cpu().numpy()
+    
+    def save_model(self, filepath):
+        """Save model to disk"""
+        torch.save({
+            'model_state_dict': self.model.state_dict(),
+            'scaler': self.scaler,
+            'sequence_length': self.sequence_length,
+            'features_dim': self.features_dim
+        }, filepath)
+    
+    def load_model(self, filepath):
+        """Load model from disk"""
+        checkpoint = torch.load(filepath, map_location=self.device)
+        self.scaler = checkpoint['scaler']
+        self.build_model()
+        self.model.load_state_dict(checkpoint['model_state_dict'])
+        self.model.eval()
